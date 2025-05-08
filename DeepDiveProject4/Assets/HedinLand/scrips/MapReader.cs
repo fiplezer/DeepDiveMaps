@@ -9,10 +9,6 @@ public class MapReader : MonoBehaviour
 
     public TMP_Text debugText;
     public bool gps_ok = false;
-    float PI = Mathf.PI;
-
-    GPSloc startLoc = new GPSloc();
-    GPSloc currLoc = new GPSloc();
 
     IEnumerator Start()
     {
@@ -20,6 +16,7 @@ public class MapReader : MonoBehaviour
         {
             Debug.Log("Location is not enabled");
             debugText.text = "Location is not enabled";
+           
         }
 
         Input.location.Start();
@@ -47,11 +44,9 @@ public class MapReader : MonoBehaviour
         {
             Debug.Log("location: " + Input.location.lastData.latitude + " " + Input.location.lastData.longitude);
             debugText.text
-                = "\nLocation: \nLat: " + Input.location.lastData.latitude
+                = "Location: \nLat: " + Input.location.lastData.latitude
                 + " \nLon: " + Input.location.lastData.longitude
-                + " \nAlt: " + Input.location.lastData.altitude
-                + " \nAcc: " + Input.location.lastData.horizontalAccuracy
-                + " \nTime: " + Input.location.lastData.timestamp;
+                + " \nAcc: " + Input.location.lastData.horizontalAccuracy;
             gps_ok = true;
         }
     }
@@ -62,12 +57,18 @@ public class MapReader : MonoBehaviour
         if (gps_ok)
         {
             debugText.text
-                = "\nLocation: \nLat: " + Input.location.lastData.latitude
+                = "Location: \nLat: " + Input.location.lastData.latitude
                 + " \nLon: " + Input.location.lastData.longitude
                 + " \nAcc: " + Input.location.lastData.horizontalAccuracy;
         }
     }
+    public void StopGPS()
+    {
+        Input.location.Stop();
+
+    }
 }
+
 
 public class GPSloc
 {
