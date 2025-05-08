@@ -10,8 +10,13 @@ public class MapReader : MonoBehaviour
     public TMP_Text debugText;
     public bool gps_ok = false;
 
+    private bool lockGPS = false;
+
     public float Latitude { get; private set; }
     public float Longitude { get; private set; }
+
+    public float LatitudeStart { get; private set; }
+    public float LongitudeStart { get; private set; }
 
     IEnumerator Start()
     {
@@ -47,6 +52,8 @@ public class MapReader : MonoBehaviour
             Latitude = Input.location.lastData.latitude;
             Longitude = Input.location.lastData.longitude;
 
+
+
             Debug.Log("location: " + Latitude + " " + Longitude);
             debugText.text
                 = "Location: \nLat: " + Latitude
@@ -58,8 +65,9 @@ public class MapReader : MonoBehaviour
 
     void Update()
     {
-        if (gps_ok)
+        if (gps_ok && !lockGPS)
         {
+            // Update from GPS only if lockGPS is false
             Latitude = Input.location.lastData.latitude;
             Longitude = Input.location.lastData.longitude;
 
@@ -67,6 +75,42 @@ public class MapReader : MonoBehaviour
                 = "Location: \nLat: " + Latitude
                 + " \nLon: " + Longitude
                 + " \nAcc: " + Input.location.lastData.horizontalAccuracy;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            // Lock GPS updates
+            lockGPS = true;
+
+            debugText.text = "Stored Location: \nLat: " + Latitude + "\nLon: " + Longitude;
+
+            Debug.Log("Stored Location: Lat: " + Latitude + ", Lon: " + Longitude);
+        }
+
+        if (lockGPS)
+        {
+            // WASD movement
+            if (Input.GetKey(KeyCode.W))
+            {
+                Latitude += 0.01f; // Move north
+            }
+            if (Input.GetKey(KeyCode.S))
+            {
+                Latitude -= 0.01f; // Move south
+            }
+            if (Input.GetKey(KeyCode.A))
+            {
+                Longitude -= 0.01f; // Move west
+            }
+            if (Input.GetKey(KeyCode.D))
+            {
+                Longitude += 0.01f; // Move east
+            }
+
+            // Update debug text with new position
+            debugText.text = "Stored Location: \nLat: " + Latitude + "\nLon: " + Longitude;
+
+            Debug.Log("Updated Location: Lat: " + Latitude + ", Lon: " + Longitude);
         }
     }
 
