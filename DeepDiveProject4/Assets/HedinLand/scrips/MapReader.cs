@@ -10,13 +10,15 @@ public class MapReader : MonoBehaviour
     public TMP_Text debugText;
     public bool gps_ok = false;
 
+    public float Latitude { get; private set; }
+    public float Longitude { get; private set; }
+
     IEnumerator Start()
     {
         if (!Input.location.isEnabledByUser)
         {
             Debug.Log("Location is not enabled");
             debugText.text = "Location is not enabled";
-           
         }
 
         Input.location.Start();
@@ -42,32 +44,38 @@ public class MapReader : MonoBehaviour
         }
         else
         {
-            Debug.Log("location: " + Input.location.lastData.latitude + " " + Input.location.lastData.longitude);
+            Latitude = Input.location.lastData.latitude;
+            Longitude = Input.location.lastData.longitude;
+
+            Debug.Log("location: " + Latitude + " " + Longitude);
             debugText.text
-                = "Location: \nLat: " + Input.location.lastData.latitude
-                + " \nLon: " + Input.location.lastData.longitude
+                = "Location: \nLat: " + Latitude
+                + " \nLon: " + Longitude
                 + " \nAcc: " + Input.location.lastData.horizontalAccuracy;
             gps_ok = true;
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (gps_ok)
         {
+            Latitude = Input.location.lastData.latitude;
+            Longitude = Input.location.lastData.longitude;
+
             debugText.text
-                = "Location: \nLat: " + Input.location.lastData.latitude
-                + " \nLon: " + Input.location.lastData.longitude
+                = "Location: \nLat: " + Latitude
+                + " \nLon: " + Longitude
                 + " \nAcc: " + Input.location.lastData.horizontalAccuracy;
         }
     }
+
     public void StopGPS()
     {
         Input.location.Stop();
-
     }
 }
+
 
 
 public class GPSloc
